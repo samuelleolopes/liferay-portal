@@ -114,7 +114,7 @@ export type TestrayCaseResult = {
 	closedDate: string;
 	commentMBMessage: string;
 	commentMBMessageId: string;
-	component: TestrayComponent;
+	component?: TestrayComponent;
 	dateCreated: string;
 	dateModified: string;
 	dueStatus: number;
@@ -207,8 +207,22 @@ export type TestrayRun = {
 
 export type TestraySubTask = {
 	dueStatus: number;
+	id: number;
 	name: string;
+	r_taskToSubtasks_c_task: TestrayTask;
+	r_userToSubtasks_user: UserAccount;
 	score: number;
+	statusUpdateDate: string;
+	userId: UserAccount;
+};
+
+export type TestraySubTaskCasesResult = {
+	caseResult?: TestrayCaseResult;
+	id?: number;
+	name?: string;
+	r_caseResultToSubtasksCasesResults_c_caseResult?: TestrayCaseResult;
+	r_subtaskToSubtasksCasesResults_c_subtask?: TestraySubTask;
+	subTask?: TestraySubTask;
 };
 
 export type TestraySuite = {

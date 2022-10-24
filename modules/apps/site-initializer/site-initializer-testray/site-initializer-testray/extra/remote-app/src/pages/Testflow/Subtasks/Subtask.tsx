@@ -14,17 +14,20 @@
 
 import {useEffect} from 'react';
 
-import Avatar from '../../components/Avatar';
-import Code from '../../components/Code';
-import Container from '../../components/Layout/Container';
-import ListView from '../../components/ListView';
-import StatusBadge from '../../components/StatusBadge';
-import QATable from '../../components/Table/QATable';
-import useHeader from '../../hooks/useHeader';
-import i18n from '../../i18n';
-import {caseResultsResource, testrayCaseResultRest} from '../../services/rest';
-import {getStatusLabel} from '../../util/constants';
-import {subtask} from '../../util/mock';
+import Avatar from '../../../components/Avatar';
+import Code from '../../../components/Code';
+import Container from '../../../components/Layout/Container';
+import ListView from '../../../components/ListView';
+import StatusBadge from '../../../components/StatusBadge';
+import QATable from '../../../components/Table/QATable';
+import useHeader from '../../../hooks/useHeader';
+import i18n from '../../../i18n';
+import {
+	caseResultsResource,
+	testrayCaseResultRest,
+} from '../../../services/rest';
+import {getStatusLabel} from '../../../util/constants';
+import {subtask} from '../../../util/mock';
 
 const Subtasks = () => {
 	const {setHeading} = useHeader();

@@ -17,6 +17,7 @@ import {useEffect} from 'react';
 import {Link, useParams} from 'react-router-dom';
 
 import Avatar from '../../components/Avatar';
+import AssignToMe from '../../components/Avatar/AssigneToMe';
 import Code from '../../components/Code';
 import Container from '../../components/Layout/Container';
 import ListView from '../../components/ListView';
@@ -27,8 +28,15 @@ import QATable from '../../components/Table/QATable';
 import useCaseResultGroupBy from '../../data/useCaseResultGroupBy';
 import {useFetch} from '../../hooks/useFetch';
 import useHeader from '../../hooks/useHeader';
+import useMutate from '../../hooks/useMutate';
 import i18n from '../../i18n';
-import {TestrayTask, testrayTaskImpl} from '../../services/rest';
+import {filters} from '../../schema/filter';
+import {
+	TestraySubTask,
+	TestrayTask,
+	testrayTaskImpl,
+} from '../../services/rest';
+import {testraySubtaskImpl} from '../../services/rest/TestraySubtasks';
 import {
 	SUBTASK_STATUS,
 	StatusesProgressScore,
@@ -37,6 +45,7 @@ import {
 import {getTimeFromNow} from '../../util/date';
 import {assigned} from '../../util/mock';
 import {searchUtil} from '../../util/search';
+import useSubtasksActions from './Subtasks/useSubtasksActions';
 
 export const progressScoreItems = [
 	[StatusesProgressScore.SELF, 7000],
@@ -50,6 +59,8 @@ const ShortcutIcon = () => (
 
 const TestFlowTasks = () => {
 	const {testrayTaskId} = useParams();
+	const {updateItemFromList} = useMutate();
+	const {actions, form} = useSubtasksActions();
 
 	const {data: testrayTask, loading} = useFetch<TestrayTask>(
 		testrayTaskImpl.getResource(testrayTaskId as string),
@@ -208,13 +219,18 @@ const TestFlowTasks = () => {
 
 			<Container className="mt-3">
 				<ListView
-					managementToolbarProps={{title: i18n.translate('subtasks')}}
-					resource="/subtasks"
+					managementToolbarProps={{
+						filterFields: filters.subtasks as any,
+						title: i18n.translate('subtasks'),
+					}}
+					resource={testraySubtaskImpl.resource}
 					tableProps={{
+						actions,
 						columns: [
 							{
 								clickable: true,
 								key: 'name',
+								sorteable: true,
 								value: i18n.translate('name'),
 							},
 							{
@@ -231,42 +247,77 @@ const TestFlowTasks = () => {
 									</StatusBadge>
 								),
 
+								sorteable: true,
 								value: i18n.translate('status'),
 							},
 							{
 								clickable: true,
 								key: 'score',
+								sorteable: true,
 								value: i18n.translate('score'),
 							},
 							{
 								clickable: true,
 								key: 'tests',
+								sorteable: true,
 								value: i18n.translate('tests'),
 							},
 							{
-								clickable: true,
 								key: 'error',
 								render: (value) => <Code>{value}</Code>,
 								size: 'xl',
 								value: i18n.translate('errors'),
 							},
 							{
-								clickable: true,
-								key: 'assignee',
-								render: (assignee: any) =>
-									assignee && (
-										<Avatar
-											displayName
-											name={assignee[0]?.name}
-											url={assignee[0]?.url}
+								key: 'user',
+								render: (
+									_: any,
+									subtask: TestraySubTask,
+									mutate
+								) => {
+									if (subtask.userId) {
+										return (
+											<Avatar
+												className="text-capitalize"
+												displayName
+												name={`${subtask?.userId?.emailAddress
+													.split('@')[0]
+													.replace('.', ' ')}`}
+												size="sm"
+											/>
+										);
+									}
+
+									return (
+										<AssignToMe
+											onClick={() =>
+												testraySubtaskImpl
+													.assignToMe(subtask)
+													.then(() => {
+														updateItemFromList(
+															mutate,
+															0,
+															{},
+															{
+																revalidate: true,
+															}
+														);
+													})
+													.then(form.onSuccess)
+													.catch(form.onError)
+											}
 										/>
-									),
-								size: 'sm',
+									);
+								},
 								value: i18n.translate('assignee'),
 							},
 						],
 						navigateTo: () => '/testflow/subtasks',
+						rowSelectable: true,
 					}}
+					transformData={(response) =>
+						testraySubtaskImpl.transformDataFromList(response)
+					}
 					variables={{
 						filter: searchUtil.eq(
 							'taskId',
