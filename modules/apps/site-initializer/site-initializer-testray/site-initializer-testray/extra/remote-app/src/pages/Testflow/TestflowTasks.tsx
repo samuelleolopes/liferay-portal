@@ -16,6 +16,7 @@ import ClayIcon from '@clayui/icon';
 import {Link, useOutletContext} from 'react-router-dom';
 
 import Avatar from '../../components/Avatar';
+import AssignToMe from '../../components/Avatar/AssigneToMe';
 import Code from '../../components/Code';
 import Container from '../../components/Layout/Container';
 import ListView from '../../components/ListView';
@@ -26,12 +27,30 @@ import {StatusBadgeType} from '../../components/StatusBadge/StatusBadge';
 import QATable from '../../components/Table/QATable';
 import useCaseResultGroupBy from '../../data/useCaseResultGroupBy';
 import useHeader from '../../hooks/useHeader';
+import useMutate from '../../hooks/useMutate';
 import i18n from '../../i18n';
+<<<<<<< Updated upstream
 import {PickList, TestrayTask} from '../../services/rest';
 import {StatusesProgressScore, chartClassNames} from '../../util/constants';
+=======
+<<<<<<< Updated upstream
+import {TestrayTask, testrayTaskImpl} from '../../services/rest';
+import {
+	SUBTASK_STATUS,
+	StatusesProgressScore,
+	chartClassNames,
+} from '../../util/constants';
+=======
+import {filters} from '../../schema/filter';
+import {PickList, TestraySubTask, TestrayTask} from '../../services/rest';
+import {testraySubTaskImpl} from '../../services/rest/TestraySubtask';
+import {StatusesProgressScore, chartClassNames} from '../../util/constants';
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import {getTimeFromNow} from '../../util/date';
 import {assigned} from '../../util/mock';
 import {searchUtil} from '../../util/search';
+import useSubtasksActions from './Subtask/useSubtasksActions';
 
 type OutletContext = {
 	testrayTask: TestrayTask;
@@ -42,7 +61,17 @@ const ShortcutIcon = () => (
 );
 
 const TestFlowTasks = () => {
+<<<<<<< Updated upstream
 	const {testrayTask} = useOutletContext<OutletContext>();
+=======
+<<<<<<< Updated upstream
+	const {testrayTaskId} = useParams();
+=======
+	const {testrayTask} = useOutletContext<OutletContext>();
+	const {updateItemFromList} = useMutate();
+	const {actions, form} = useSubtasksActions();
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 	useHeader({useTabs: []});
 
@@ -180,13 +209,18 @@ const TestFlowTasks = () => {
 
 			<Container className="mt-3">
 				<ListView
-					managementToolbarProps={{title: i18n.translate('subtasks')}}
-					resource="/subtasks"
+					managementToolbarProps={{
+						filterFields: filters.subtasks as any,
+						title: i18n.translate('subtasks'),
+					}}
+					resource={testraySubTaskImpl.resource}
 					tableProps={{
+						actions,
 						columns: [
 							{
 								clickable: true,
 								key: 'name',
+								sorteable: true,
 								value: i18n.translate('name'),
 							},
 							{
@@ -200,42 +234,76 @@ const TestFlowTasks = () => {
 									</StatusBadge>
 								),
 
+								sorteable: true,
 								value: i18n.translate('status'),
 							},
 							{
 								clickable: true,
 								key: 'score',
+								sorteable: true,
 								value: i18n.translate('score'),
 							},
 							{
 								clickable: true,
 								key: 'tests',
+								sorteable: true,
 								value: i18n.translate('tests'),
 							},
 							{
-								clickable: true,
 								key: 'error',
 								render: (value) => <Code>{value}</Code>,
 								size: 'xl',
 								value: i18n.translate('errors'),
 							},
 							{
-								clickable: true,
-								key: 'assignee',
-								render: (assignee: any) =>
-									assignee && (
-										<Avatar
-											displayName
-											name={assignee[0]?.name}
-											url={assignee[0]?.url}
+								key: 'user',
+								render: (
+									_: any,
+									subtask: TestraySubTask,
+									mutate
+								) => {
+									if (subtask.user) {
+										return (
+											<Avatar
+												className="text-capitalize"
+												displayName
+												name={`${subtask?.user?.emailAddress
+													.split('@')[0]
+													.replace('.', ' ')}`}
+												size="sm"
+											/>
+										);
+									}
+
+									return (
+										<AssignToMe
+											onClick={() =>
+												testraySubTaskImpl
+													.assignToMe(subtask)
+													.then(() => {
+														updateItemFromList(
+															mutate,
+															0,
+															{},
+															{
+																revalidate: true,
+															}
+														);
+													})
+													.then(form.onSuccess)
+													.catch(form.onError)
+											}
 										/>
-									),
-								size: 'sm',
+									);
+								},
 								value: i18n.translate('assignee'),
 							},
 						],
 						navigateTo: (subtask) => `subtasks/${subtask.id}`,
 					}}
+					transformData={(response) =>
+						testraySubTaskImpl.transformDataFromList(response)
+					}
 					variables={{
 						filter: searchUtil.eq('taskId', testrayTask.id),
 					}}
