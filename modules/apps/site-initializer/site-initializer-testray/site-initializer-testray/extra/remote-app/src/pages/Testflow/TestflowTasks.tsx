@@ -261,7 +261,7 @@ const TestFlowTasks = () => {
 								value: i18n.translate('tests'),
 							},
 							{
-								key: 'error',
+								key: 'errors',
 								render: (value) => <Code>{value}</Code>,
 								size: 'xl',
 								value: i18n.translate('errors'),
