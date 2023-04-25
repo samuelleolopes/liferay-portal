@@ -136,6 +136,7 @@ const TeamMembersTable = ({
 			selectedAccountRoleItem
 		);
 	};
+	console.log('userAccounts:', userAccounts);
 
 	return (
 		<>
@@ -185,12 +186,14 @@ const TeamMembersTable = ({
 									{userAccount.emailAddress}
 								</p>
 							),
+
 							name: (
 								<NameColumn
 									gravatarAPI={gravatarAPI}
 									userAccount={userAccount}
 								/>
 							),
+
 							options: (
 								<OptionsColumn
 									edit={index === currentIndexEditing}

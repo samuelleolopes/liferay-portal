@@ -167,14 +167,12 @@ const InviteTeamMembersPage = ({
 				isSelectdAdministratorOrRequestorRole
 			) {
 				setBaseButtonDisabled(true);
-			}
-			else {
+			} else {
 				setInitialError(false);
 				setBaseButtonDisabled(sucessfullyEmails !== totalEmails);
 				setshowEmptyEmailError(false);
 			}
-		}
-		else if (touched['invites']?.some((field) => field?.email)) {
+		} else if (touched['invites']?.some((field) => field?.email)) {
 			setInitialError(true);
 			setBaseButtonDisabled(true);
 		}
@@ -185,6 +183,8 @@ const InviteTeamMembersPage = ({
 		isSelectdAdministratorOrRequestorRole,
 		errors,
 	]);
+
+	console.log('values:', values);
 
 	const handleSubmit = async () => {
 		const filledEmails = values?.invites?.filter(({email}) => email) || [];
@@ -204,6 +204,10 @@ const InviteTeamMembersPage = ({
 					);
 
 					if (associateContactRoleData.ok) {
+						console.log('entrouAssociate');
+						console.log('filledEmail', project);
+						console.log('filledEmail.role.id', filledEmail.role.id);
+
 						await associateUserAccount({
 							context: {
 								displaySuccess: false,
@@ -212,6 +216,13 @@ const InviteTeamMembersPage = ({
 								accountKey: project.accountKey,
 								accountRoleId: filledEmail.role.id,
 								emailAddress: filledEmail.email,
+
+								userAccount: {
+									alternateName: filledEmail.givenName,
+									emailAddress: filledEmail.email,
+									familyName: filledEmail.familyName,
+									givenName: filledEmail.givenName,
+								},
 							},
 						});
 
@@ -230,6 +241,7 @@ const InviteTeamMembersPage = ({
 			);
 
 			if (filledEmailsDataFiltered.length) {
+				console.log('entrou AQUI');
 				const newMembersData = await addTeamMemberInvitation({
 					context: {
 						displaySuccess,
@@ -237,8 +249,10 @@ const InviteTeamMembersPage = ({
 					},
 					variables: {
 						TeamMembersInvitation: filledEmailsDataFiltered.map(
-							({email, role}) => ({
+							({email, familyName, givenName, role}) => ({
 								email,
+								familyName,
+								givenName,
 								r_accountEntryToDXPCloudEnvironment_accountEntryId:
 									project?.id,
 								role: role.key,
@@ -260,8 +274,7 @@ const InviteTeamMembersPage = ({
 			}
 
 			setIsLoadingUserInvitation(false);
-		}
-		else {
+		} else {
 			setInitialError(true);
 			setBaseButtonDisabled(true);
 			setTouched({
@@ -272,6 +285,7 @@ const InviteTeamMembersPage = ({
 
 	const isAnyEmptyEmail = () => {
 		const hasEmptyEmails = values?.invites?.some(({email}) => !email);
+		console.log('hasEmptyEmails:', hasEmptyEmails);
 
 		setshowEmptyEmailError(hasEmptyEmails);
 
@@ -301,7 +315,7 @@ const InviteTeamMembersPage = ({
 				helper: i18n.translate(
 					'team-members-will-receive-an-email-invitation-to-access-this-project-on-customer-portal'
 				),
-				title: i18n.translate('invite-your-team-members'),
+				title: i18n.translate('invite-your-team-members111'),
 			}}
 		>
 			{hasInitialError && (
