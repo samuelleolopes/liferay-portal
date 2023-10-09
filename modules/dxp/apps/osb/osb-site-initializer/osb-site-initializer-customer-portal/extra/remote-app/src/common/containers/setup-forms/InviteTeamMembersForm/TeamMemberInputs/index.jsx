@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import ClayAlert from '@clayui/alert';
 import {ClayInput} from '@clayui/form';
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import useProvisioningLicenseKeys from '~/common/hooks/useProvisioningLicenseKeys';
 import i18n from '../../../../I18n';
 import {Input, Select} from '../../../../components';
@@ -29,6 +30,8 @@ const TeamMemberInputs = ({
 	selectOnChange,
 }) => {
 	const provisioningService = useProvisioningLicenseKeys();
+
+	const [warningMessage, setWarningMessage] = useState();
 
 	const bannedDomains = useBannedDomains(
 		invite?.email,
@@ -132,7 +135,7 @@ const TeamMemberInputs = ({
 				<ClayInput.GroupItem className="m-0">
 					<Select
 						groupStyle="m-0"
-						label={i18n.translate('role')}
+						label={i18n.translate('role1')}
 						name={`invites[${id}].role.id`}
 						onChange={(event) => selectOnChange(event.target.value)}
 						options={optionsFormated}
@@ -140,6 +143,33 @@ const TeamMemberInputs = ({
 					/>
 				</ClayInput.GroupItem>
 			</ClayInput.Group>
+
+			<ClayAlert
+				className="mx-3 p-2 text-paragraph-xs"
+				displayType="warning"
+			>
+				<>
+					{i18n.sub(
+						'is-x-part-of-your-organization-it-looks-like-x-is-a-new-domain-name',
+						['email address entered by the user', 'email domain']
+					)}
+
+					<ul>
+						<li>
+							{i18n.sub(
+								'to-update-an-existing-users-email-address-have-the-user-log-in-with-their-current-address-to-access-x',
+								['email address entered by the user']
+							)}
+						</li>
+
+						<li>
+							{i18n.translate(
+								'be-aware-that-adding-new-users-from-outside-your-organization-may-compromise-the-security-of-your-project'
+							)}
+						</li>
+					</ul>
+				</>
+			</ClayAlert>
 			<hr className="mb-3 mt-2" />
 		</>
 	);
