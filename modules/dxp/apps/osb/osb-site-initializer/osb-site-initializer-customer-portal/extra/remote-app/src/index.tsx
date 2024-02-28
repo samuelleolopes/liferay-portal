@@ -21,6 +21,7 @@ import getIconSpriteMap from './common/utils/getIconSpriteMap';
 import CustomerPortal from './routes/customer-portal';
 import Home from './routes/home';
 import Onboarding from './routes/onboarding';
+import Release from './routes/release';
 
 const ELEMENT_ID = 'liferay-remote-app-customer-portal';
 
@@ -28,6 +29,7 @@ const AppRoutes = {
 	home: Home,
 	onboarding: Onboarding,
 	portal: CustomerPortal,
+	release: Release,
 };
 
 type Properties = {
