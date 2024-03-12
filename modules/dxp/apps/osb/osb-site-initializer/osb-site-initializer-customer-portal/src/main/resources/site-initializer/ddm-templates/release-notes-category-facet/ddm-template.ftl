@@ -243,13 +243,13 @@
 	/>
 
 	<#list taxonomyVocabularyItems as taxonomyVocabularyItem>
-		<#if assetCategoriesSearchFacetDisplayContext.getBucketDisplayContexts(taxonomyVocabularyItem.name)?has_content>		
+		<#if assetCategoriesSearchFacetDisplayContext.getBucketDisplayContexts(taxonomyVocabularyItem.name)?has_content>
 		  	<#if stringUtil.equals(taxonomyVocabularyItem.externalReferenceCode, "PRODUCT-CAPABILITIES")>
-			  	<#assign vocabularyNamesSorted = [taxonomyVocabularyItem.name] + vocabularyNamesSorted />
+				<#assign vocabularyNamesSorted = [taxonomyVocabularyItem.name] + vocabularyNamesSorted />
 		  	<#elseif stringUtil.equals(taxonomyVocabularyItem.externalReferenceCode, "RELEASES-STATUS-PREVIOUS")>
-			  	<#assign vocabularyNamesSorted = [vocabularyNamesSorted[0]] + [taxonomyVocabularyItem.name] + vocabularyNamesSorted[1..] />
+				<#assign vocabularyNamesSorted = [vocabularyNamesSorted[0]] + [taxonomyVocabularyItem.name] + vocabularyNamesSorted[1..] />
 		  	<#elseif stringUtil.equals(taxonomyVocabularyItem.externalReferenceCode, "RELEASES-STATUS-CURRENT")>
-			  	<#assign vocabularyNamesSorted = vocabularyNamesSorted + [taxonomyVocabularyItem.name] />
+				<#assign vocabularyNamesSorted = vocabularyNamesSorted + [taxonomyVocabularyItem.name] />
 		  	</#if>
 		</#if>
 	</#list>

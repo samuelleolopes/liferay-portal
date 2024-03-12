@@ -97,8 +97,7 @@
 									{
 										"definition": {
 											"fragment": {
-												"key": "information-template-container",
-												"siteKey": "Customer Portal"
+												"key": "information-template-container"
 											},
 											"fragmentConfig": {
 											},
@@ -190,7 +189,8 @@
 					{
 						"definition": {
 							"fragment": {
-								"key": "BASIC_COMPONENT-tabs"
+								"key": "release-notes-tabs",
+								"siteKey": "Customer Portal"
 							},
 							"fragmentConfig": {
 								"numberOfTabs": 3,
@@ -621,7 +621,7 @@
 																	"federatedSearchKey": "",
 																	"filterField": "ddmStructureKey",
 																	"filterQueryType": "match",
-																	"filterValue": "RELEASE-NOTES-HIGHLIGHT-STRUCTURE",
+																	"filterValue": "RELEASE-NOTES-FEATURE-STRUCTURE",
 																	"immutable": "false",
 																	"invisible": "true",
 																	"occur": "must",
@@ -826,7 +826,7 @@
 																	"federatedSearchKey": "",
 																	"filterField": "ddmStructureKey",
 																	"filterQueryType": "match",
-																	"filterValue": "RELEASE-NOTES-HIGHLIGHT-STRUCTURE",
+																	"filterValue": "RELEASE-NOTES-BREAKING-CHANGE-STRUCTURE",
 																	"immutable": "false",
 																	"invisible": "true",
 																	"occur": "must",
