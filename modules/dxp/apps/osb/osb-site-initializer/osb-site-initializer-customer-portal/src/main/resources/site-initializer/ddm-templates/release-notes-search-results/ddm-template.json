@@ -1,0 +1,6 @@
+{
+	"className": "com.liferay.portal.search.web.internal.result.display.context.SearchResultSummaryDisplayContext",
+	"ddmTemplateKey": "RELEASE-NOTES-SEARCH-RESULTS",
+	"name": "Release Notes Search Results",
+	"resourceClassName": "com.liferay.portlet.display.template.PortletDisplayTemplate"
+}
