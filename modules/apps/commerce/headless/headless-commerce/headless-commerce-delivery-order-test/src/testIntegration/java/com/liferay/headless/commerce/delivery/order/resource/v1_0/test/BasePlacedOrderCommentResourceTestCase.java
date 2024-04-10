@@ -210,6 +210,8 @@ public abstract class BasePlacedOrderCommentResourceTestCase {
 		PlacedOrderComment placedOrderComment =
 			testGraphQLGetPlacedOrderComment_addPlacedOrderComment();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				placedOrderComment,
@@ -227,11 +229,37 @@ public abstract class BasePlacedOrderCommentResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/placedOrderComment"))));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertTrue(
+			equals(
+				placedOrderComment,
+				PlacedOrderCommentSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryOrder_v1_0",
+								new GraphQLField(
+									"placedOrderComment",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"placedOrderCommentId",
+												placedOrderComment.getId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryOrder_v1_0",
+						"Object/placedOrderComment"))));
 	}
 
 	@Test
 	public void testGraphQLGetPlacedOrderCommentNotFound() throws Exception {
 		Long irrelevantPlacedOrderCommentId = RandomTestUtil.randomLong();
+
+		// No namespace
 
 		Assert.assertEquals(
 			"Not Found",
@@ -247,6 +275,27 @@ public abstract class BasePlacedOrderCommentResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryOrder_v1_0",
+						new GraphQLField(
+							"placedOrderComment",
+							new HashMap<String, Object>() {
+								{
+									put(
+										"placedOrderCommentId",
+										irrelevantPlacedOrderCommentId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

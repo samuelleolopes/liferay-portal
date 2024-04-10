@@ -427,6 +427,8 @@ public abstract class BaseSkuResourceTestCase {
 	public void testGraphQLGetChannelProductSku() throws Exception {
 		Sku sku = testGraphQLGetChannelProductSku_addSku();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				sku,
@@ -451,6 +453,37 @@ public abstract class BaseSkuResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/channelProductSku"))));
+
+		// Using the namespace headlessCommerceDeliveryCatalog_v1_0
+
+		Assert.assertTrue(
+			equals(
+				sku,
+				SkuSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryCatalog_v1_0",
+								new GraphQLField(
+									"channelProductSku",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"channelId",
+												testGraphQLGetChannelProductSku_getChannelId());
+
+											put(
+												"productId",
+												testGraphQLGetChannelProductSku_getProductId(
+													sku));
+
+											put("skuId", sku.getId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryCatalog_v1_0",
+						"Object/channelProductSku"))));
 	}
 
 	protected Long testGraphQLGetChannelProductSku_getChannelId()
@@ -472,6 +505,8 @@ public abstract class BaseSkuResourceTestCase {
 		Long irrelevantProductId = RandomTestUtil.randomLong();
 		Long irrelevantSkuId = RandomTestUtil.randomLong();
 
+		// No namespace
+
 		Assert.assertEquals(
 			"Not Found",
 			JSONUtil.getValueAsString(
@@ -486,6 +521,27 @@ public abstract class BaseSkuResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryCatalog_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryCatalog_v1_0",
+						new GraphQLField(
+							"channelProductSku",
+							new HashMap<String, Object>() {
+								{
+									put("channelId", irrelevantChannelId);
+									put("productId", irrelevantProductId);
+									put("skuId", irrelevantSkuId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

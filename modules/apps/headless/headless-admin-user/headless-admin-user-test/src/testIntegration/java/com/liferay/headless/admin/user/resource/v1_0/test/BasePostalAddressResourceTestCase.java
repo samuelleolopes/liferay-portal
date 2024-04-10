@@ -425,7 +425,10 @@ public abstract class BasePostalAddressResourceTestCase {
 
 	@Test
 	public void testGraphQLDeletePostalAddress() throws Exception {
-		PostalAddress postalAddress =
+
+		// No namespace
+
+		PostalAddress postalAddress1 =
 			testGraphQLDeletePostalAddress_addPostalAddress();
 
 		Assert.assertTrue(
@@ -435,23 +438,62 @@ public abstract class BasePostalAddressResourceTestCase {
 						"deletePostalAddress",
 						new HashMap<String, Object>() {
 							{
-								put("postalAddressId", postalAddress.getId());
+								put("postalAddressId", postalAddress1.getId());
 							}
 						})),
 				"JSONObject/data", "Object/deletePostalAddress"));
-		JSONArray errorsJSONArray = JSONUtil.getValueAsJSONArray(
+
+		JSONArray errorsJSONArray1 = JSONUtil.getValueAsJSONArray(
 			invokeGraphQLQuery(
 				new GraphQLField(
 					"postalAddress",
 					new HashMap<String, Object>() {
 						{
-							put("postalAddressId", postalAddress.getId());
+							put("postalAddressId", postalAddress1.getId());
 						}
 					},
 					new GraphQLField("id"))),
 			"JSONArray/errors");
 
-		Assert.assertTrue(errorsJSONArray.length() > 0);
+		Assert.assertTrue(errorsJSONArray1.length() > 0);
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		PostalAddress postalAddress2 =
+			testGraphQLDeletePostalAddress_addPostalAddress();
+
+		Assert.assertTrue(
+			JSONUtil.getValueAsBoolean(
+				invokeGraphQLMutation(
+					new GraphQLField(
+						"headlessAdminUser_v1_0",
+						new GraphQLField(
+							"deletePostalAddress",
+							new HashMap<String, Object>() {
+								{
+									put(
+										"postalAddressId",
+										postalAddress2.getId());
+								}
+							}))),
+				"JSONObject/data", "JSONObject/headlessAdminUser_v1_0",
+				"Object/deletePostalAddress"));
+
+		JSONArray errorsJSONArray2 = JSONUtil.getValueAsJSONArray(
+			invokeGraphQLQuery(
+				new GraphQLField(
+					"headlessAdminUser_v1_0",
+					new GraphQLField(
+						"postalAddress",
+						new HashMap<String, Object>() {
+							{
+								put("postalAddressId", postalAddress2.getId());
+							}
+						},
+						new GraphQLField("id")))),
+			"JSONArray/errors");
+
+		Assert.assertTrue(errorsJSONArray2.length() > 0);
 	}
 
 	protected PostalAddress testGraphQLDeletePostalAddress_addPostalAddress()
@@ -484,6 +526,8 @@ public abstract class BasePostalAddressResourceTestCase {
 		PostalAddress postalAddress =
 			testGraphQLGetPostalAddress_addPostalAddress();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				postalAddress,
@@ -501,11 +545,36 @@ public abstract class BasePostalAddressResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/postalAddress"))));
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		Assert.assertTrue(
+			equals(
+				postalAddress,
+				PostalAddressSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessAdminUser_v1_0",
+								new GraphQLField(
+									"postalAddress",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"postalAddressId",
+												postalAddress.getId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data", "JSONObject/headlessAdminUser_v1_0",
+						"Object/postalAddress"))));
 	}
 
 	@Test
 	public void testGraphQLGetPostalAddressNotFound() throws Exception {
 		Long irrelevantPostalAddressId = RandomTestUtil.randomLong();
+
+		// No namespace
 
 		Assert.assertEquals(
 			"Not Found",
@@ -521,6 +590,27 @@ public abstract class BasePostalAddressResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessAdminUser_v1_0",
+						new GraphQLField(
+							"postalAddress",
+							new HashMap<String, Object>() {
+								{
+									put(
+										"postalAddressId",
+										irrelevantPostalAddressId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

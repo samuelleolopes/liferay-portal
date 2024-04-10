@@ -77,6 +77,7 @@ import com.liferay.portal.kernel.util.File;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -105,6 +106,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -585,7 +587,7 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			serviceContext);
 
 		user = _userService.updateExternalReferenceCode(
-			userAccountId,
+			user,
 			GetterUtil.getString(
 				userAccount.getExternalReferenceCode(),
 				user.getExternalReferenceCode()));
@@ -651,9 +653,9 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			_accountEntryUserRelService.addAccountEntryUserRel(
 				accountId, contextUser.getUserId(),
 				userAccount.getAlternateName(), userAccount.getEmailAddress(),
-				contextAcceptLanguage.getPreferredLocale(),
-				userAccount.getGivenName(), userAccount.getAdditionalName(),
-				userAccount.getFamilyName(), _getPrefixId(null, userAccount),
+				_getLocale(userAccount), userAccount.getGivenName(),
+				userAccount.getAdditionalName(), userAccount.getFamilyName(),
+				_getPrefixId(null, userAccount),
 				_getSuffixId(null, userAccount), userAccount.getJobTitle(),
 				ServiceContextFactory.getInstance(contextHttpServletRequest));
 
@@ -829,8 +831,7 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			user = _userService.addUser(
 				contextCompany.getCompanyId(), autoPassword, password, password,
 				false, userAccount.getAlternateName(),
-				userAccount.getEmailAddress(),
-				contextAcceptLanguage.getPreferredLocale(),
+				userAccount.getEmailAddress(), _getLocale(userAccount),
 				userAccount.getGivenName(), userAccount.getAdditionalName(),
 				userAccount.getFamilyName(), _getPrefixId(null, userAccount),
 				_getSuffixId(null, userAccount), true,
@@ -860,8 +861,7 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			user = _userService.addUser(
 				contextCompany.getCompanyId(), autoPassword, password, password,
 				false, userAccount.getAlternateName(),
-				userAccount.getEmailAddress(),
-				contextAcceptLanguage.getPreferredLocale(),
+				userAccount.getEmailAddress(), _getLocale(userAccount),
 				userAccount.getGivenName(), userAccount.getAdditionalName(),
 				userAccount.getFamilyName(), _getPrefixId(null, userAccount),
 				_getSuffixId(null, userAccount), true,
@@ -1029,8 +1029,7 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			externalReferenceCode, contextUser.getUserId(),
 			contextCompany.getCompanyId(), autoPassword, password, password,
 			false, userAccount.getAlternateName(),
-			userAccount.getEmailAddress(),
-			contextAcceptLanguage.getPreferredLocale(),
+			userAccount.getEmailAddress(), _getLocale(userAccount),
 			userAccount.getGivenName(), userAccount.getAdditionalName(),
 			userAccount.getFamilyName(), _getPrefixId(null, userAccount),
 			_getSuffixId(null, userAccount), true,
@@ -1324,6 +1323,16 @@ public class UserAccountResourceImpl extends BaseUserAccountResourceImpl {
 			null, contextHttpServletRequest, userId,
 			contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
 			contextUser);
+	}
+
+	private Locale _getLocale(UserAccount userAccount) {
+		String languageId = userAccount.getLanguageId();
+
+		if (Validator.isNull(languageId)) {
+			return contextAcceptLanguage.getPreferredLocale();
+		}
+
+		return LocaleUtil.fromLanguageId(languageId);
 	}
 
 	private Map<String, Map<String, String>> _getModelActions(

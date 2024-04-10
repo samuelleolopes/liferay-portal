@@ -94,8 +94,13 @@ class TestrayCaseResultRest extends Rest<CaseResultForm, TestrayCaseResult> {
 									.r_teamToComponents_c_team,
 					  }
 					: undefined,
-				issues: caseResult.caseResultToCaseResultsIssues ?? [],
-
+				issues:
+					caseResult.caseResultToCaseResultsIssues
+						?.map(
+							(caseResultsIssues) =>
+								caseResultsIssues.issueToCaseResultsIssues?.name
+						)
+						.join(', ') || '',
 				run: caseResult?.r_runToCaseResult_c_run
 					? {
 							...caseResult?.r_runToCaseResult_c_run,
@@ -114,25 +119,25 @@ class TestrayCaseResultRest extends Rest<CaseResultForm, TestrayCaseResult> {
 	): CaseResultAggregation {
 		return {
 			caseResultBlocked: Number(
-				caseResultAggregation.caseResultBlocked ?? 0
+				caseResultAggregation?.caseResultBlocked ?? 0
 			),
 			caseResultFailed: Number(
-				caseResultAggregation.caseResultFailed ?? 0
+				caseResultAggregation?.caseResultFailed ?? 0
 			),
 			caseResultInProgress: Number(
-				caseResultAggregation.caseResultInProgress ?? 0
+				caseResultAggregation?.caseResultInProgress ?? 0
 			),
 			caseResultIncomplete: Number(
-				caseResultAggregation.caseResultIncomplete ?? 0
+				caseResultAggregation?.caseResultIncomplete ?? 0
 			),
 			caseResultPassed: Number(
-				caseResultAggregation.caseResultPassed ?? 0
+				caseResultAggregation?.caseResultPassed ?? 0
 			),
 			caseResultTestFix: Number(
-				caseResultAggregation.caseResultTestFix ?? 0
+				caseResultAggregation?.caseResultTestFix ?? 0
 			),
 			caseResultUntested: Number(
-				caseResultAggregation.caseResultUntested ?? 0
+				caseResultAggregation?.caseResultUntested ?? 0
 			),
 		};
 	}
@@ -183,7 +188,9 @@ class TestrayCaseResultRest extends Rest<CaseResultForm, TestrayCaseResult> {
 
 	public async assignCaseResultIssue(caseResultId: number, issues: string[]) {
 		const caseResultIssuesResponse = await testrayCaseResultsIssuesImpl.getAll(
-			{filter: SearchBuilder.eq('caseResultId', caseResultId)}
+			{
+				filter: SearchBuilder.eq('caseResultId', caseResultId),
+			}
 		);
 
 		for (const issue of issues) {

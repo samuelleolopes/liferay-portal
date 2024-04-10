@@ -6,16 +6,20 @@
 import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput} from '@clayui/form';
+import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal from '@clayui/modal';
 import {API, Input} from '@liferay/object-js-components-web';
+import classNames from 'classnames';
 import React, {FormEvent, useRef} from 'react';
 
 import {ModalImportProperties} from '../ViewObjectDefinitions/ViewObjectDefinitions';
-import {TFile} from './ModalImport';
+import {ModalImportKeys, TFile} from './ModalImport';
 import {
 	modalImportContentFeedbackMessage,
 	modalImportContentTitle,
 } from './modalImportLanguageUtil';
+
+import './ModalImportContent.scss';
 
 interface ModalImportContentProps extends ModalImportProperties {
 	error?: API.ErrorDetails;
@@ -23,14 +27,17 @@ interface ModalImportContentProps extends ModalImportProperties {
 	fileName: string;
 	handleOnClose: () => void;
 	handleSubmit: (value: FormEvent<HTMLFormElement>) => void;
+	importLoading: boolean;
+	importedObjectDefinitions?: ObjectDefinition[];
 	inputFile: File;
-	modalImportKey: string;
+	modalImportKey: ModalImportKeys;
 	name: string;
 	nameMaxLength: string;
 	portletNamespace: string;
 	setError: (value?: API.ErrorDetails) => void;
 	setExternalReferenceCode: (value: string) => void;
 	setFile: (value: TFile) => void;
+	setImportedObjectDefinitions: (value?: ObjectDefinition[]) => void;
 	setName: (value: string) => void;
 }
 
@@ -41,6 +48,8 @@ export function ModalImportContent({
 	fileName,
 	handleOnClose,
 	handleSubmit,
+	importLoading,
+	importedObjectDefinitions,
 	inputFile,
 	modalImportKey,
 	name,
@@ -49,6 +58,7 @@ export function ModalImportContent({
 	setError,
 	setExternalReferenceCode,
 	setFile,
+	setImportedObjectDefinitions,
 	setName,
 }: ModalImportContentProps) {
 	const importFormId = `${portletNamespace}importForm`;
@@ -56,6 +66,14 @@ export function ModalImportContent({
 	const nameInputId = `${portletNamespace}name`;
 
 	const getImportButtonDisableState = () => {
+		if (
+			Liferay.FeatureFlags['LPS-187142'] &&
+			inputFile &&
+			importedObjectDefinitions
+		) {
+			return false;
+		}
+
 		if (!inputFile || !name) {
 			return true;
 		}
@@ -99,20 +117,24 @@ export function ModalImportContent({
 						)}
 					</ClayAlert>
 
-					<ClayForm.Group>
-						<label htmlFor={nameInputId}>
-							{Liferay.Language.get('name')}
-						</label>
+					{!importedObjectDefinitions && (
+						<ClayForm.Group>
+							<label htmlFor={nameInputId}>
+								{Liferay.Language.get('name')}
+							</label>
 
-						<ClayInput
-							id={nameInputId}
-							maxLength={Number(nameMaxLength)}
-							name={nameInputId}
-							onChange={(event) => setName(event.target.value)}
-							type="text"
-							value={name}
-						/>
-					</ClayForm.Group>
+							<ClayInput
+								id={nameInputId}
+								maxLength={Number(nameMaxLength)}
+								name={nameInputId}
+								onChange={(event) =>
+									setName(event.target.value)
+								}
+								type="text"
+								value={name}
+							/>
+						</ClayForm.Group>
+					)}
 
 					<ClayForm.Group>
 						<label htmlFor={`${portletNamespace}${JSONInputId}`}>
@@ -148,6 +170,9 @@ export function ModalImportContent({
 												fileName: '',
 												inputFile: null,
 											});
+											setImportedObjectDefinitions(
+												undefined
+											);
 											inputFileRef.current.value = '';
 										}}
 									>
@@ -195,11 +220,35 @@ export function ModalImportContent({
 									try {
 										const JSONFile = JSON.parse(
 											fileReader.result as string
-										) as {externalReferenceCode: string};
-										setError(undefined);
-										setExternalReferenceCode(
-											JSONFile.externalReferenceCode
-										);
+										) as
+											| {externalReferenceCode: string}
+											| ObjectDefinition[];
+
+										if (
+											Liferay.FeatureFlags[
+												'LPS-187142'
+											] &&
+											Array.isArray(JSONFile) &&
+											JSONFile[0].scope
+										) {
+											setError(undefined);
+											setImportedObjectDefinitions(
+												JSONFile
+											);
+											setExternalReferenceCode('');
+											setName('');
+										}
+										else {
+											setError(undefined);
+											setExternalReferenceCode(
+												(JSONFile as {
+													externalReferenceCode: string;
+												}).externalReferenceCode
+											);
+											setImportedObjectDefinitions(
+												undefined
+											);
+										}
 									}
 									catch (error) {
 										setError({
@@ -235,11 +284,23 @@ export function ModalImportContent({
 						</ClayButton>
 
 						<ClayButton
-							disabled={getImportButtonDisableState()}
+							className={classNames({
+								'lfr-object__modal-import-content-loading-button': importLoading,
+							})}
+							disabled={
+								getImportButtonDisableState() || importLoading
+							}
 							form={importFormId}
 							type="submit"
 						>
-							{Liferay.Language.get('import')}
+							{importLoading ? (
+								<ClayLoadingIndicator
+									displayType="light"
+									size="sm"
+								/>
+							) : (
+								Liferay.Language.get('import')
+							)}
 						</ClayButton>
 					</ClayButton.Group>
 				}

@@ -111,7 +111,7 @@ public class ObjectDefinitionUtil {
 		).put(
 			"CommerceReturn", "/commerce-returns"
 		).put(
-			"CommerceReturnItem", "/commerce-return-Items"
+			"CommerceReturnItem", "/commerce-return-items"
 		).put(
 			"FDSAction", "/data-set-manager/actions"
 		).put(
@@ -141,6 +141,8 @@ public class ObjectDefinitionUtil {
 			"Address", "L_POSTAL_ADDRESS"
 		).put(
 			"CommerceOrder", "L_COMMERCE_ORDER"
+		).put(
+			"CommerceOrderItem", "L_COMMERCE_ORDER_ITEM"
 		).put(
 			"CommercePricingClass", "L_COMMERCE_PRODUCT_GROUP"
 		).put(

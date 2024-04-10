@@ -6,21 +6,25 @@
 import {API} from '@liferay/object-js-components-web';
 import {FormEvent} from 'react';
 import {ModalImportProperties} from '../ViewObjectDefinitions/ViewObjectDefinitions';
-import {TFile} from './ModalImport';
+import {ModalImportKeys, TFile} from './ModalImport';
+import './ModalImportContent.scss';
 interface ModalImportContentProps extends ModalImportProperties {
 	error?: API.ErrorDetails;
 	externalReferenceCode: string;
 	fileName: string;
 	handleOnClose: () => void;
 	handleSubmit: (value: FormEvent<HTMLFormElement>) => void;
+	importLoading: boolean;
+	importedObjectDefinitions?: ObjectDefinition[];
 	inputFile: File;
-	modalImportKey: string;
+	modalImportKey: ModalImportKeys;
 	name: string;
 	nameMaxLength: string;
 	portletNamespace: string;
 	setError: (value?: API.ErrorDetails) => void;
 	setExternalReferenceCode: (value: string) => void;
 	setFile: (value: TFile) => void;
+	setImportedObjectDefinitions: (value?: ObjectDefinition[]) => void;
 	setName: (value: string) => void;
 }
 export declare function ModalImportContent({
@@ -30,6 +34,8 @@ export declare function ModalImportContent({
 	fileName,
 	handleOnClose,
 	handleSubmit,
+	importLoading,
+	importedObjectDefinitions,
 	inputFile,
 	modalImportKey,
 	name,
@@ -38,6 +44,7 @@ export declare function ModalImportContent({
 	setError,
 	setExternalReferenceCode,
 	setFile,
+	setImportedObjectDefinitions,
 	setName,
 }: ModalImportContentProps): JSX.Element;
 export {};

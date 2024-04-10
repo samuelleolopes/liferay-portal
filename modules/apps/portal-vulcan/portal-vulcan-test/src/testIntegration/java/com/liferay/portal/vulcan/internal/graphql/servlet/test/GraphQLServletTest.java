@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.test.rule.FeatureFlags;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
@@ -35,6 +34,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.ws.rs.NotFoundException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -102,7 +103,6 @@ public class GraphQLServletTest {
 				"JSONObject/data", "JSONObject/createTestDTO"));
 	}
 
-	@FeatureFlags("LPD-10789")
 	@Test
 	public void testMutationWithGraphQLNamespace() throws Exception {
 
@@ -327,7 +327,6 @@ public class GraphQLServletTest {
 			0, () -> _test(-1, -1, null, 0));
 	}
 
-	@FeatureFlags("LPD-10789")
 	@Test
 	public void testQueryWithGraphQLNamespace() throws Exception {
 
@@ -347,6 +346,18 @@ public class GraphQLServletTest {
 				"JSONObject/data", "JSONObject/testPath_v1_0",
 				"JSONObject/testDTO"));
 
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				_invoke(
+					new GraphQLField(
+						"testPath_v1_0",
+						new GraphQLField(
+							"testNotFoundDTO", new GraphQLField("id"))),
+					"query"),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
 		// Without namespace (backwards compatibility)
 
 		_assertEquals(
@@ -359,6 +370,15 @@ public class GraphQLServletTest {
 						new GraphQLField("string")),
 					"query"),
 				"JSONObject/data", "JSONObject/testDTO"));
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				_invoke(
+					new GraphQLField("testNotFoundDTO", new GraphQLField("id")),
+					"query"),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
 	}
 
 	@Test
@@ -421,7 +441,6 @@ public class GraphQLServletTest {
 			false, queryFieldsJSONArray, false, "testDTOPage");
 	}
 
-	@FeatureFlags("LPD-10789")
 	@Test
 	public void testSchemaWithGraphQLNamespaces() throws Exception {
 
@@ -605,6 +624,11 @@ public class GraphQLServletTest {
 			@GraphQLName("pageSize") int pageSize) {
 
 			return new TestDTOPage(page, pageSize);
+		}
+
+		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
+		public TestDTO testNotFoundDTO() {
+			throw new NotFoundException();
 		}
 
 		@GraphQLTypeExtension(TestDTO.class)

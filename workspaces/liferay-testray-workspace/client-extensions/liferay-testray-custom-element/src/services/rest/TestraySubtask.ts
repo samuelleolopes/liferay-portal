@@ -6,7 +6,7 @@
 import Rest from '../../core/Rest';
 import SearchBuilder from '../../core/SearchBuilder';
 import yupSchema from '../../schema/yup';
-import {waitTimeout} from '../../util';
+import {getUniqueList, waitTimeout} from '../../util';
 import {CaseResultStatuses, SubTaskStatuses} from '../../util/statuses';
 import {Liferay} from '../liferay';
 import {liferayMessageBoardImpl} from './LiferayMessageBoard';
@@ -14,12 +14,7 @@ import {testrayCaseResultImpl} from './TestrayCaseResult';
 import {testrayIssueImpl} from './TestrayIssues';
 import {testraySubtaskCaseResultImpl} from './TestraySubtaskCaseResults';
 import {testraySubtaskIssuesImpl} from './TestraySubtaskIssues';
-import {
-	APIResponse,
-	TestrayIssue,
-	TestraySubTask,
-	TestraySubTaskCaseResult,
-} from './types';
+import {APIResponse, TestraySubTask, TestraySubTaskCaseResult} from './types';
 
 type SubtaskForm = typeof yupSchema.subtask.__outputType & {
 	projectId: number;
@@ -57,30 +52,20 @@ class TestraySubtaskImpl extends Rest<SubtaskForm, TestraySubTask> {
 				score,
 			}),
 			nestedFields:
-				'tasks,users,subtask,subtaskToSubtasksCasesResults,caseResultToSubtasksCasesResults,caseResultToCaseResultsIssues,issueToCaseResultsIssues',
-			nestedFieldsDepth: 4,
+				'tasks,users,subtask,subtaskToSubtasksCasesResults,caseResultToSubtasksCasesResults',
+			nestedFieldsDepth: 2,
 			transformData: (subTask) => ({
 				...subTask,
 				issues: subTask.subtaskToSubtasksCasesResults?.reduce(
-					(previousIssues: TestrayIssue[], subtasksIssues) => {
+					(previousIssues: string[], subTaskCaseResult) => {
 						const newIssues =
-							subtasksIssues?.caseResultToSubtasksCasesResults?.caseResultToCaseResultsIssues.map(
-								(caseResultToCaseResultsIssues) =>
-									caseResultToCaseResultsIssues.issueToCaseResultsIssues
-							) || [];
+							subTaskCaseResult?.caseResultToSubtasksCasesResults
+								?.issues || '';
 
-						newIssues?.forEach((issue?: TestrayIssue) => {
-							const issueExists = previousIssues.some(
-								(oldIssue: TestrayIssue) =>
-									oldIssue.id === issue?.id
-							);
-
-							if (!issueExists) {
-								previousIssues.push(issue as TestrayIssue);
-							}
-						});
-
-						return previousIssues;
+						return getUniqueList([
+							...previousIssues,
+							...(newIssues ? newIssues.split(',') : []),
+						]);
 					},
 					[]
 				),

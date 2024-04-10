@@ -229,6 +229,8 @@ public abstract class BaseAddressResourceTestCase {
 	public void testGraphQLGetCartBillingAddres() throws Exception {
 		Address address = testGraphQLGetCartBillingAddres_addAddress();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				address,
@@ -246,6 +248,30 @@ public abstract class BaseAddressResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/cartBillingAddres"))));
+
+		// Using the namespace headlessCommerceDeliveryCart_v1_0
+
+		Assert.assertTrue(
+			equals(
+				address,
+				AddressSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryCart_v1_0",
+								new GraphQLField(
+									"cartBillingAddres",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"cartId",
+												testGraphQLGetCartBillingAddres_getCartId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryCart_v1_0",
+						"Object/cartBillingAddres"))));
 	}
 
 	protected Long testGraphQLGetCartBillingAddres_getCartId()
@@ -259,6 +285,8 @@ public abstract class BaseAddressResourceTestCase {
 	public void testGraphQLGetCartBillingAddresNotFound() throws Exception {
 		Long irrelevantCartId = RandomTestUtil.randomLong();
 
+		// No namespace
+
 		Assert.assertEquals(
 			"Not Found",
 			JSONUtil.getValueAsString(
@@ -271,6 +299,25 @@ public abstract class BaseAddressResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryCart_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryCart_v1_0",
+						new GraphQLField(
+							"cartBillingAddres",
+							new HashMap<String, Object>() {
+								{
+									put("cartId", irrelevantCartId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}
@@ -306,6 +353,8 @@ public abstract class BaseAddressResourceTestCase {
 	public void testGraphQLGetCartShippingAddres() throws Exception {
 		Address address = testGraphQLGetCartShippingAddres_addAddress();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				address,
@@ -323,6 +372,30 @@ public abstract class BaseAddressResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/cartShippingAddres"))));
+
+		// Using the namespace headlessCommerceDeliveryCart_v1_0
+
+		Assert.assertTrue(
+			equals(
+				address,
+				AddressSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryCart_v1_0",
+								new GraphQLField(
+									"cartShippingAddres",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"cartId",
+												testGraphQLGetCartShippingAddres_getCartId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryCart_v1_0",
+						"Object/cartShippingAddres"))));
 	}
 
 	protected Long testGraphQLGetCartShippingAddres_getCartId()
@@ -336,6 +409,8 @@ public abstract class BaseAddressResourceTestCase {
 	public void testGraphQLGetCartShippingAddresNotFound() throws Exception {
 		Long irrelevantCartId = RandomTestUtil.randomLong();
 
+		// No namespace
+
 		Assert.assertEquals(
 			"Not Found",
 			JSONUtil.getValueAsString(
@@ -348,6 +423,25 @@ public abstract class BaseAddressResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryCart_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryCart_v1_0",
+						new GraphQLField(
+							"cartShippingAddres",
+							new HashMap<String, Object>() {
+								{
+									put("cartId", irrelevantCartId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

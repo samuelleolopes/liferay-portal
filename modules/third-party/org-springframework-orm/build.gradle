@@ -42,11 +42,18 @@ jarManifest {
 }
 
 jarPatched {
+	mustRunAfter compileJava
+	mustRunAfter processResources
+
 	archiveFileName = jar.archiveFileName
 	destinationDirectory = jar.destinationDirectory
 	duplicatesStrategy = "exclude"
 
 	from copyPatchOriginalLibClasses
+}
+
+jarSources {
+	mustRunAfter patch
 }
 
 javadoc {

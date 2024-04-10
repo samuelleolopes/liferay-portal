@@ -6,7 +6,6 @@
 import {expect, mergeTests} from '@playwright/test';
 
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
-import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
 import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
 import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import getRandomString from '../../utils/getRandomString';
@@ -16,7 +15,6 @@ import getPageDefinition from './utils/getPageDefinition';
 
 export const test = mergeTests(
 	apiHelpersTest,
-	applicationsMenuPageTest,
 	featureFlagsTest({
 		'LPS-178052': true,
 	}),
@@ -41,11 +39,11 @@ test('View Undo interaction state is cleared after refreshing the page', async (
 		'BASIC_COMPONENT-heading'
 	);
 
-	const layout = await apiHelpers.headlessDelivery.createSitePage(
-		site.id,
-		getRandomString(),
-		getPageDefinition([headingFragment])
-	);
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		pageDefinition: getPageDefinition([headingFragment]),
+		siteId: site.id,
+		title: getRandomString(),
+	});
 
 	// Go to edit mode of page
 
@@ -94,11 +92,11 @@ test('Undo and Redo buttons work as expected', async ({
 		'BASIC_COMPONENT-tabs'
 	);
 
-	const layout = await apiHelpers.headlessDelivery.createSitePage(
-		site.id,
-		getRandomString(),
-		getPageDefinition([fragmentDefinition])
-	);
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		pageDefinition: getPageDefinition([fragmentDefinition]),
+		siteId: site.id,
+		title: getRandomString(),
+	});
 
 	const tabsFragment = pageEditorPage.getFragment(tabsId);
 
@@ -169,11 +167,11 @@ test('Undo history works as expected', async ({
 		'BASIC_COMPONENT-heading'
 	);
 
-	const layout = await apiHelpers.headlessDelivery.createSitePage(
-		site.id,
-		getRandomString(),
-		getPageDefinition([fragmentDefinition])
-	);
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		pageDefinition: getPageDefinition([fragmentDefinition]),
+		siteId: site.id,
+		title: getRandomString(),
+	});
 
 	// Go to edit mode of page
 

@@ -55,6 +55,7 @@ HTMLWhitespaceCheck | .html or .path | Finds missing and unnecessary whitespace 
 InstanceofOrderCheck | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Check the order of `instanceof` calls. |
 JSONBatchEngineDataFileCheck | .ipynb, .json or .npmbridgerc | Remove elements in `*.batch-engine-data.json` files. |
 JSONPageFileCheck | .ipynb, .json or .npmbridgerc | Sorts by `roleName` in `page.json` files. |
+JSONPortletResponseUtilCheck | .java | Checks if `JSONPortletResponseUtil.writeJSON ` should come before method calling `hideDefaultSuccessMessage`. |
 JSONResourcePermissionsFileCheck | .ipynb, .json or .npmbridgerc | Sorts by `resourceName` and `roleName` in `resource-permissions.json` files. |
 JSONStylingCheck | .ipynb, .json or .npmbridgerc | Applies rules to enforce consistency in code style. |
 [JSONUtilCheck](check/json_util_check.markdown#jsonutilcheck) | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks for utilization of class `JSONUtil`. |
@@ -104,6 +105,7 @@ LDIFWhitespaceCheck | .ldif | Finds missing and unnecessary whitespace. |
 [ListUtilCheck](check/list_util_check.markdown#listutilcheck) | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks for utilization of class `ListUtil`. |
 LiteralStringEqualsCheck | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Finds cases where `Objects.equals` should be used. |
 [LogMessageCheck](check/message_check.markdown#messagecheck) | .java | Validates messages that are passed to `log.*` calls. |
+MarkdownEmptyLinesCheck | .markdown or .md | Finds missing and unnecessary empty lines. |
 MarkdownFileExtensionCheck | .markdown or .md | Finds `markdown` files with `.md` extension (use `.markdown`). |
 MarkdownStylingCheck | .markdown or .md | Applies rules to enforce consistency in code style. |
 MarkdownWhitespaceCheck | .markdown or .md | Finds missing and unnecessary whitespace in `.markdown` files. |

@@ -304,6 +304,8 @@ public abstract class BaseRoleResourceTestCase {
 			new GraphQLField("items", getGraphQLFields()),
 			new GraphQLField("page"), new GraphQLField("totalCount"));
 
+		// No namespace
+
 		JSONObject rolesJSONObject = JSONUtil.getValueAsJSONObject(
 			invokeGraphQLQuery(graphQLField), "JSONObject/data",
 			"JSONObject/roles");
@@ -315,6 +317,26 @@ public abstract class BaseRoleResourceTestCase {
 
 		rolesJSONObject = JSONUtil.getValueAsJSONObject(
 			invokeGraphQLQuery(graphQLField), "JSONObject/data",
+			"JSONObject/roles");
+
+		Assert.assertEquals(
+			totalCount + 2, rolesJSONObject.getLong("totalCount"));
+
+		assertContains(
+			role1,
+			Arrays.asList(
+				RoleSerDes.toDTOs(rolesJSONObject.getString("items"))));
+		assertContains(
+			role2,
+			Arrays.asList(
+				RoleSerDes.toDTOs(rolesJSONObject.getString("items"))));
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		rolesJSONObject = JSONUtil.getValueAsJSONObject(
+			invokeGraphQLQuery(
+				new GraphQLField("headlessAdminUser_v1_0", graphQLField)),
+			"JSONObject/data", "JSONObject/headlessAdminUser_v1_0",
 			"JSONObject/roles");
 
 		Assert.assertEquals(
@@ -424,6 +446,8 @@ public abstract class BaseRoleResourceTestCase {
 	public void testGraphQLGetRole() throws Exception {
 		Role role = testGraphQLGetRole_addRole();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				role,
@@ -439,11 +463,34 @@ public abstract class BaseRoleResourceTestCase {
 								},
 								getGraphQLFields())),
 						"JSONObject/data", "Object/role"))));
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		Assert.assertTrue(
+			equals(
+				role,
+				RoleSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessAdminUser_v1_0",
+								new GraphQLField(
+									"role",
+									new HashMap<String, Object>() {
+										{
+											put("roleId", role.getId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data", "JSONObject/headlessAdminUser_v1_0",
+						"Object/role"))));
 	}
 
 	@Test
 	public void testGraphQLGetRoleNotFound() throws Exception {
 		Long irrelevantRoleId = RandomTestUtil.randomLong();
+
+		// No namespace
 
 		Assert.assertEquals(
 			"Not Found",
@@ -457,6 +504,25 @@ public abstract class BaseRoleResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessAdminUser_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessAdminUser_v1_0",
+						new GraphQLField(
+							"role",
+							new HashMap<String, Object>() {
+								{
+									put("roleId", irrelevantRoleId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.asset.kernel.NoSuchClassTypeException;
 import com.liferay.asset.list.service.AssetListEntryLocalService;
 import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
+import com.liferay.client.extension.model.ClientExtensionEntryRel;
 import com.liferay.client.extension.service.ClientExtensionEntryRelLocalService;
 import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.manager.CETManager;
@@ -364,6 +365,21 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 
 		if ((cet == null) || !Objects.equals(type, cet.getType())) {
 			return;
+		}
+
+		List<ClientExtensionEntryRel> clientExtensionEntryRels =
+			_clientExtensionEntryRelLocalService.getClientExtensionEntryRels(
+				_portal.getClassNameId(Layout.class), layout.getPlid());
+
+		for (ClientExtensionEntryRel clientExtensionEntryRel :
+				clientExtensionEntryRels) {
+
+			if (cetExternalReferenceCode.equals(
+					clientExtensionEntryRel.getCETExternalReferenceCode())) {
+
+				_clientExtensionEntryRelLocalService.
+					deleteClientExtensionEntryRel(clientExtensionEntryRel);
+			}
 		}
 
 		UnicodeProperties unicodeProperties = new UnicodeProperties(true);
@@ -734,8 +750,12 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 			}
 
 			if (!FeatureFlagManagerUtil.isEnabled("LPD-6378") &&
-				(utilityPageTemplate.getType() ==
-					UtilityPageTemplate.Type.LOGIN)) {
+				((utilityPageTemplate.getType() ==
+					UtilityPageTemplate.Type.CREATE_ACCOUNT) ||
+				 (utilityPageTemplate.getType() ==
+					 UtilityPageTemplate.Type.FORGOT_PASSWORD) ||
+				 (utilityPageTemplate.getType() ==
+					 UtilityPageTemplate.Type.LOGIN))) {
 
 				continue;
 			}

@@ -2464,6 +2464,12 @@ public class BundleSiteInitializer implements SiteInitializer {
 			pageJSONObject.getBoolean("private"),
 			pageJSONObject.getString("friendlyURL"));
 
+		if ((layout != null) && !Objects.equals(layout.getType(), type)) {
+			_layoutLocalService.deleteLayout(layout);
+
+			layout = null;
+		}
+
 		if (layout != null) {
 			_layoutLocalService.updateLayout(
 				serviceContext.getScopeGroupId(), layout.isPrivateLayout(),
@@ -2592,7 +2598,8 @@ public class BundleSiteInitializer implements SiteInitializer {
 		Layout draftLayout = layout.fetchDraftLayout();
 
 		if (Objects.equals(type, LayoutConstants.TYPE_COLLECTION) ||
-			Objects.equals(type, LayoutConstants.TYPE_CONTENT)) {
+			Objects.equals(type, LayoutConstants.TYPE_CONTENT) ||
+			Objects.equals(type, LayoutConstants.TYPE_UTILITY)) {
 
 			JSONObject pageElementJSONObject =
 				pageDefinitionJSONObject.getJSONObject("pageElement");
@@ -2682,7 +2689,8 @@ public class BundleSiteInitializer implements SiteInitializer {
 		}
 
 		if (Objects.equals(type, LayoutConstants.TYPE_COLLECTION) ||
-			Objects.equals(type, LayoutConstants.TYPE_CONTENT)) {
+			Objects.equals(type, LayoutConstants.TYPE_CONTENT) ||
+			Objects.equals(type, LayoutConstants.TYPE_UTILITY)) {
 
 			JSONObject settingsJSONObject =
 				pageDefinitionJSONObject.getJSONObject("settings");

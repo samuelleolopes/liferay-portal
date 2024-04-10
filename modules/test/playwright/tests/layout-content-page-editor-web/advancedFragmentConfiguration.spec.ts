@@ -6,7 +6,6 @@
 import {expect, mergeTests} from '@playwright/test';
 
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
-import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
 import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
 import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../fixtures/loginTest';
@@ -19,7 +18,6 @@ import getWidgetDefinition from './utils/getWidgetDefinition';
 
 export const test = mergeTests(
 	apiHelpersTest,
-	applicationsMenuPageTest,
 	featureFlagsTest({
 		'LPS-178052': true,
 	}),
@@ -47,11 +45,11 @@ test('checks that the fragment is hidden from Site Search Results', async ({
 			'com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet',
 	});
 
-	layouts.searchBar = await apiHelpers.headlessDelivery.createSitePage(
-		site.id,
-		widgetLayoutId,
-		getPageDefinition([widgetDefinition])
-	);
+	layouts.searchBar = await apiHelpers.headlessDelivery.createSitePage({
+		pageDefinition: getPageDefinition([widgetDefinition]),
+		siteId: site.id,
+		title: widgetLayoutId,
+	});
 
 	// Create a page with a fragment and publish it
 
@@ -62,11 +60,11 @@ test('checks that the fragment is hidden from Site Search Results', async ({
 		'BASIC_COMPONENT-heading'
 	);
 
-	layouts.fragment = await apiHelpers.headlessDelivery.createSitePage(
-		site.id,
-		getRandomString(),
-		getPageDefinition([headingFragmentDefinition])
-	);
+	layouts.fragment = await apiHelpers.headlessDelivery.createSitePage({
+		pageDefinition: getPageDefinition([headingFragmentDefinition]),
+		siteId: site.id,
+		title: getRandomString(),
+	});
 
 	await pageEditorPage.goToEditMode(layouts.fragment, site.friendlyUrlPath);
 
@@ -171,6 +169,8 @@ test('checks that the advanced configuration of a fragment appears in its corres
 			],
 		})
 	);
+
+	await fragmentEditorPage.publish();
 
 	// Create a content page with the fragment previously created
 

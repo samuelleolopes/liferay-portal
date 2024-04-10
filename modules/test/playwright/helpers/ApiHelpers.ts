@@ -13,13 +13,17 @@ import {DataEngineApiHelper} from './DataEngineApiHelper';
 import {FeatureFlagApiHelper} from './FeatureFlagApiHelper';
 import {HeadlessAdminContentApiHelper} from './HeadlessAdminContentApiHelper';
 import {HeadlessAdminUserApiHelper} from './HeadlessAdminUserApiHelper';
+import {HeadlessAdminWorkflowApiHelper} from './HeadlessAdminWorkflowApiHelper';
 import {HeadlessCommerceAdminCatalogApiHelper} from './HeadlessCommerceAdminCatalogApiHelper';
 import {HeadlessCommerceAdminChannelApiHelper} from './HeadlessCommerceAdminChannelApiHelper';
+import {HeadlessCommerceAdminInventoryApiHelper} from './HeadlessCommerceAdminInventoryApiHelper';
 import {HeadlessCommerceAdminPaymentApiHelper} from './HeadlessCommerceAdminPaymentApiHelper';
 import {HeadlessCommerceDeliveryCartApiHelper} from './HeadlessCommerceDeliveryCartApiHelper';
 import {HeadlessCommerceDeliveryCatalogApiHelper} from './HeadlessCommerceDeliveryCatalogApiHelper';
 import {HeadlessDeliveryApiHelper} from './HeadlessDeliveryApiHelper';
 import {HeadlessSiteApiHelper} from './HeadlessSiteApiHelper';
+import {ListTypeAdminApiHelper} from './ListTypeAdminApiHelper';
+import {NotificationApiHelper} from './NotificationApiHelper';
 import {ObjectAdminApiHelper} from './ObjectAdminApiHelper';
 import {ObjectApiHelper} from './ObjectApiHelper';
 import {JSONWebServicesClassNameApiHelper} from './json-web-services/JSONWebServicesClassNameApiHelper';
@@ -28,6 +32,7 @@ import {JSONWebServicesDDMApiHelper} from './json-web-services/JSONWebServicesDD
 import {JSONWebServicesGroupApiHelper} from './json-web-services/JSONWebServicesGroupApiHelper';
 import {JSONWebServicesJournalApiHelper} from './json-web-services/JSONWebServicesJournalApiHelper';
 import {JSONWebServicesLayoutApiHelper} from './json-web-services/JSONWebServicesLayoutApiHelper';
+import {JSONWebServicesLayoutSetPrototypeApiHelper} from './json-web-services/JSONWebServicesLayoutSetPrototypeApiHelper';
 
 type TDataApiHelpersData = {
 	id: any;
@@ -41,8 +46,10 @@ export class ApiHelpers {
 	readonly dataEngine: DataEngineApiHelper;
 	readonly headlessAdminContent: HeadlessAdminContentApiHelper;
 	readonly headlessAdminUser: HeadlessAdminUserApiHelper;
+	readonly headlessAdminWorkflow: HeadlessAdminWorkflowApiHelper;
 	readonly headlessCommerceAdminCatalog: HeadlessCommerceAdminCatalogApiHelper;
 	readonly headlessCommerceAdminChannel: HeadlessCommerceAdminChannelApiHelper;
+	readonly headlessCommerceAdminInventoryApiHelper: HeadlessCommerceAdminInventoryApiHelper;
 	readonly headlessCommerceAdminPaymentApiHelper: HeadlessCommerceAdminPaymentApiHelper;
 	readonly headlessCommerceDeliveryCatalog: HeadlessCommerceDeliveryCatalogApiHelper;
 	readonly headlessCommerceDeliveryCart: HeadlessCommerceDeliveryCartApiHelper;
@@ -54,6 +61,9 @@ export class ApiHelpers {
 	readonly jsonWebServicesGroup: JSONWebServicesGroupApiHelper;
 	readonly jsonWebServicesJournal: JSONWebServicesJournalApiHelper;
 	readonly jsonWebServicesLayout: JSONWebServicesLayoutApiHelper;
+	readonly jsonWebServicesLayoutSetPrototype: JSONWebServicesLayoutSetPrototypeApiHelper;
+	readonly listTypeAdmin: ListTypeAdminApiHelper;
+	readonly notification: NotificationApiHelper;
 	readonly object: ObjectApiHelper;
 	readonly objectAdmin: ObjectAdminApiHelper;
 	readonly page: Page;
@@ -69,10 +79,13 @@ export class ApiHelpers {
 		this.dataEngine = new DataEngineApiHelper(this);
 		this.headlessAdminContent = new HeadlessAdminContentApiHelper(this);
 		this.headlessAdminUser = new HeadlessAdminUserApiHelper(this);
+		this.headlessAdminWorkflow = new HeadlessAdminWorkflowApiHelper(this);
 		this.headlessCommerceAdminCatalog =
 			new HeadlessCommerceAdminCatalogApiHelper(this);
 		this.headlessCommerceAdminChannel =
 			new HeadlessCommerceAdminChannelApiHelper(this);
+		this.headlessCommerceAdminInventoryApiHelper =
+			new HeadlessCommerceAdminInventoryApiHelper(this);
 		this.headlessCommerceAdminPaymentApiHelper =
 			new HeadlessCommerceAdminPaymentApiHelper(this);
 		this.headlessCommerceDeliveryCatalog =
@@ -89,6 +102,10 @@ export class ApiHelpers {
 		this.jsonWebServicesGroup = new JSONWebServicesGroupApiHelper(this);
 		this.jsonWebServicesJournal = new JSONWebServicesJournalApiHelper(this);
 		this.jsonWebServicesLayout = new JSONWebServicesLayoutApiHelper(this);
+		this.jsonWebServicesLayoutSetPrototype =
+			new JSONWebServicesLayoutSetPrototypeApiHelper(this);
+		this.listTypeAdmin = new ListTypeAdminApiHelper(this);
+		this.notification = new NotificationApiHelper(this);
 		this.object = new ObjectApiHelper(this);
 		this.objectAdmin = new ObjectAdminApiHelper(this);
 		this.page = page;
@@ -119,6 +136,10 @@ export class ApiHelpers {
 			failOnStatusCode,
 			headers
 		);
+
+		if (response.status() === 204) {
+			return;
+		}
 
 		return response.json();
 	}

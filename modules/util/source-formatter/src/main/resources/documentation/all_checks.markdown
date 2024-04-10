@@ -132,6 +132,7 @@ JSONPackageJSONBNDVersionCheck | [Bug Prevention](bug_prevention_checks.markdown
 JSONPackageJSONCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Checks content of `package.json` files. |
 JSONPackageJSONDependencyVersionCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Checks the version for dependencies in `package.json` files. |
 JSONPageFileCheck | [Styling](styling_checks.markdown#styling-checks) | .ipynb, .json or .npmbridgerc | Sorts by `roleName` in `page.json` files. |
+JSONPortletResponseUtilCheck | [Styling](styling_checks.markdown#styling-checks) | .java | Checks if `JSONPortletResponseUtil.writeJSON ` should come before method calling `hideDefaultSuccessMessage`. |
 JSONResourcePermissionsFileCheck | [Styling](styling_checks.markdown#styling-checks) | .ipynb, .json or .npmbridgerc | Sorts by `resourceName` and `roleName` in `resource-permissions.json` files. |
 JSONStylingCheck | [Styling](styling_checks.markdown#styling-checks) | .ipynb, .json or .npmbridgerc | Applies rules to enforce consistency in code style. |
 JSONUpgradeLiferayThemePackageJSONCheck | [Upgrade](upgrade_checks.markdown#upgrade-checks) | .ipynb, .json or .npmbridgerc | Upgrade the `package.json` of a Liferay Theme to make it compatible with Liferay 7.4 |
@@ -322,6 +323,7 @@ LogParametersCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevent
 [MVCCommandNameCheck](check/mvc_command_name_check.markdown#mvccommandnamecheck) | [Naming Conventions](naming_conventions_checks.markdown#naming-conventions-checks) | .java | Checks for consistent naming for values of `mvc.command.name`. |
 [MapBuilderCheck](check/builder_check.markdown#buildercheck) | [Miscellaneous](miscellaneous_checks.markdown#miscellaneous-checks) | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks that `ConcurrentHashMapBuilder`, `HashMapBuilder`, `LinkedHashMapBuilder` or `TreeMapBuilder` is used when possible. |
 [MapIterationCheck](check/map_iteration_check.markdown#mapiterationcheck) | [Performance](performance_checks.markdown#performance-checks) | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks that there are no unnecessary map iterations. |
+MarkdownEmptyLinesCheck | [Styling](styling_checks.markdown#styling-checks) | .markdown or .md | Finds missing and unnecessary empty lines. |
 MarkdownFileExtensionCheck | [Styling](styling_checks.markdown#styling-checks) | .markdown or .md | Finds `markdown` files with `.md` extension (use `.markdown`). |
 MarkdownSourceFormatterDocumentationCheck | [Documentation](documentation_checks.markdown#documentation-checks) | .markdown or .md | Validates the header of Source Formatter documentation files. |
 MarkdownSourceFormatterReadmeCheck | [Documentation](documentation_checks.markdown#documentation-checks) | .markdown or .md | Generates Source Formatter documentation index files. |

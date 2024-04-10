@@ -241,6 +241,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 		PlacedOrderAddress placedOrderAddress =
 			testGraphQLGetPlacedOrderPlacedOrderBillingAddres_addPlacedOrderAddress();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				placedOrderAddress,
@@ -259,6 +261,30 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 								getGraphQLFields())),
 						"JSONObject/data",
 						"Object/placedOrderPlacedOrderBillingAddres"))));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertTrue(
+			equals(
+				placedOrderAddress,
+				PlacedOrderAddressSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryOrder_v1_0",
+								new GraphQLField(
+									"placedOrderPlacedOrderBillingAddres",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"placedOrderId",
+												testGraphQLGetPlacedOrderPlacedOrderBillingAddres_getPlacedOrderId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryOrder_v1_0",
+						"Object/placedOrderPlacedOrderBillingAddres"))));
 	}
 
 	protected Long
@@ -275,6 +301,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 
 		Long irrelevantPlacedOrderId = RandomTestUtil.randomLong();
 
+		// No namespace
+
 		Assert.assertEquals(
 			"Not Found",
 			JSONUtil.getValueAsString(
@@ -287,6 +315,27 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryOrder_v1_0",
+						new GraphQLField(
+							"placedOrderPlacedOrderBillingAddres",
+							new HashMap<String, Object>() {
+								{
+									put(
+										"placedOrderId",
+										irrelevantPlacedOrderId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}
@@ -334,6 +383,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 		PlacedOrderAddress placedOrderAddress =
 			testGraphQLGetPlacedOrderPlacedOrderShippingAddres_addPlacedOrderAddress();
 
+		// No namespace
+
 		Assert.assertTrue(
 			equals(
 				placedOrderAddress,
@@ -352,6 +403,30 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 								getGraphQLFields())),
 						"JSONObject/data",
 						"Object/placedOrderPlacedOrderShippingAddres"))));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertTrue(
+			equals(
+				placedOrderAddress,
+				PlacedOrderAddressSerDes.toDTO(
+					JSONUtil.getValueAsString(
+						invokeGraphQLQuery(
+							new GraphQLField(
+								"headlessCommerceDeliveryOrder_v1_0",
+								new GraphQLField(
+									"placedOrderPlacedOrderShippingAddres",
+									new HashMap<String, Object>() {
+										{
+											put(
+												"placedOrderId",
+												testGraphQLGetPlacedOrderPlacedOrderShippingAddres_getPlacedOrderId());
+										}
+									},
+									getGraphQLFields()))),
+						"JSONObject/data",
+						"JSONObject/headlessCommerceDeliveryOrder_v1_0",
+						"Object/placedOrderPlacedOrderShippingAddres"))));
 	}
 
 	protected Long
@@ -368,6 +443,8 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 
 		Long irrelevantPlacedOrderId = RandomTestUtil.randomLong();
 
+		// No namespace
+
 		Assert.assertEquals(
 			"Not Found",
 			JSONUtil.getValueAsString(
@@ -380,6 +457,27 @@ public abstract class BasePlacedOrderAddressResourceTestCase {
 							}
 						},
 						getGraphQLFields())),
+				"JSONArray/errors", "Object/0", "JSONObject/extensions",
+				"Object/code"));
+
+		// Using the namespace headlessCommerceDeliveryOrder_v1_0
+
+		Assert.assertEquals(
+			"Not Found",
+			JSONUtil.getValueAsString(
+				invokeGraphQLQuery(
+					new GraphQLField(
+						"headlessCommerceDeliveryOrder_v1_0",
+						new GraphQLField(
+							"placedOrderPlacedOrderShippingAddres",
+							new HashMap<String, Object>() {
+								{
+									put(
+										"placedOrderId",
+										irrelevantPlacedOrderId);
+								}
+							},
+							getGraphQLFields()))),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
 	}

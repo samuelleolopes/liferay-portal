@@ -58,6 +58,12 @@ public interface PropsKeys {
 	public static final String ADMIN_EMAIL_PASSWORD_SENT_SUBJECT =
 		"admin.email.password.sent.subject";
 
+	public static final String ADMIN_EMAIL_PASSWORD_UNCHANGEABLE_BODY =
+		"admin.email.password.unchangeable.body";
+
+	public static final String ADMIN_EMAIL_PASSWORD_UNCHANGEABLE_SUBJECT =
+		"admin.email.password.unchangeable.subject";
+
 	/**
 	 * @deprecated As of Mueller (7.2.x), with no direct replacement
 	 */
@@ -2252,6 +2258,9 @@ public interface PropsKeys {
 		"schema.module.build.auto.upgrade";
 
 	public static final String SCHEMA_RUN_ENABLED = "schema.run.enabled";
+
+	public static final String SCRIPT_MANAGEMENT_CONFIGURATION_ENABLED =
+		"script.management.configuration.enabled";
 
 	public static final String SEARCH_CONTAINER_PAGE_DEFAULT_DELTA =
 		"search.container.page.default.delta";

@@ -624,9 +624,7 @@ definition {
 		}
 
 		task ("Check that the analysis result appears") {
-			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, "(");
-
-			var dataSourceName = StringUtil.trim(${dataSourceName});
+			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, " ");
 
 			ACTimeFilter.clickTimeFilterButton();
 
@@ -771,9 +769,7 @@ definition {
 		}
 
 		task ("Check that the analysis result appears") {
-			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, "(");
-
-			var dataSourceName = StringUtil.trim(${dataSourceName});
+			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, " ");
 
 			ACEventAnalysis.viewAnalysisInformation(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
@@ -789,7 +785,7 @@ definition {
 		}
 
 		task ("Check that the analysis result does not appear") {
-			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - liferay dxp");
+			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
 
 		task ("Remove the filter from the analysis") {
@@ -817,7 +813,7 @@ definition {
 		}
 
 		task ("Check that the analysis result does not appear") {
-			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - liferay dxp");
+			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
 	}
 
@@ -873,9 +869,7 @@ definition {
 		}
 
 		task ("Check that the analysis result appears") {
-			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, "(");
-
-			var dataSourceName = StringUtil.trim(${dataSourceName});
+			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, " ");
 
 			ACEventAnalysis.viewAnalysisInformation(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
@@ -894,7 +888,7 @@ definition {
 		}
 
 		task ("Check that the analysis result does not appear") {
-			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - liferay dxp");
+			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
 
 		task ("Remove the filter from the analysis") {
@@ -983,9 +977,7 @@ definition {
 		}
 
 		task ("Check that the analysis result appears") {
-			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, "(");
-
-			var dataSourceName = StringUtil.trim(${dataSourceName});
+			var dataSourceName = StringUtil.extractFirst(${assignedPropertyName}, " ");
 
 			ACEventAnalysis.viewAnalysisInformation(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
@@ -1002,7 +994,7 @@ definition {
 		}
 
 		task ("Check that the analysis result does not appear") {
-			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - liferay dxp");
+			ACEventAnalysis.viewAnalysisInformationNotPresent(informationValueList = "ac page - site name - ${dataSourceName}");
 		}
 
 		task ("Remove the filter from the analysis") {

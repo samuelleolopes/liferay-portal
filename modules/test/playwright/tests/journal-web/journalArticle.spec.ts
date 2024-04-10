@@ -64,6 +64,8 @@ const expect = baseExpect.extend({
 	}),
 });
 
+const keepTitlesUntranslated = mergeTests(baseTest);
+
 const prefixUrlTest = mergeTests(
 	baseTest,
 	featureFlagsTest({
@@ -91,6 +93,122 @@ const aiCreateImageTest = mergeTests(
 	featureFlagsTest({
 		'LPD-10793': true,
 	})
+);
+
+const privateContentIconTest = mergeTests(baseTest);
+
+keepTitlesUntranslated(
+	'LPD-20723: Clay link is translating asset titles/names by default in vertical card',
+	async ({apiHelpers, journalPage, page, site}) => {
+		const contentStructureId = await getBasicWebContentStructureId(
+			apiHelpers
+		);
+
+		const title = 'add-web-content';
+
+		await addApprovedStructuredContent(
+			apiHelpers,
+			site.id,
+			contentStructureId,
+			title
+		);
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await journalPage.changeView('cards');
+
+		await expect(page.getByRole('link', {name: title})).toBeVisible({
+			timeout: 1000,
+		});
+
+		await journalPage.changeView('list');
+
+		await expect(page.getByRole('link', {name: title})).toBeVisible({
+			timeout: 1000,
+		});
+
+		await journalPage.changeView('table');
+
+		await expect(page.getByRole('link', {name: title})).toBeVisible({
+			timeout: 1000,
+		});
+	}
+);
+
+privateContentIconTest(
+	'LPD-15807: Identify at a glance if a Web Content is visible for guests in content management',
+	async ({apiHelpers, journalEditArticlePage, journalPage, site}) => {
+		const contentStructureId = await getBasicWebContentStructureId(
+			apiHelpers
+		);
+
+		const title = getRandomString();
+
+		await addApprovedStructuredContent(
+			apiHelpers,
+			site.id,
+			contentStructureId,
+			title
+		);
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await journalPage.assertPrivateContentIcon();
+
+		await journalPage.changeView('table');
+
+		await journalPage.assertPrivateContentIcon();
+
+		await journalPage.changeView('list');
+
+		await journalEditArticlePage.editArticle(title);
+
+		await journalPage.assertPrivateContentIcon();
+	}
+);
+
+privateContentIconTest(
+	'LPD-15807: Identify at a glance if a Web Content is visible for guests in the item selector',
+	async ({apiHelpers, journalEditArticlePage, journalPage, site}) => {
+		const contentStructureId = await getBasicWebContentStructureId(
+			apiHelpers
+		);
+
+		await addApprovedStructuredContent(
+			apiHelpers,
+			site.id,
+			contentStructureId,
+			getRandomString()
+		);
+
+		const title = getRandomString();
+
+		await addApprovedStructuredContent(
+			apiHelpers,
+			site.id,
+			contentStructureId,
+			title
+		);
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await journalEditArticlePage.editArticle(title);
+
+		await journalEditArticlePage.openRelatedAsset('Basic Web Content');
+
+		await journalEditArticlePage.assertPrivateContentIconInRelatedAssetPopUp(
+			'Basic Web Content'
+		);
+
+		await journalEditArticlePage.changeViewInRelatedAssetPopUp(
+			'Basic Web Content',
+			'table'
+		);
+
+		await journalEditArticlePage.assertPrivateContentIconInRelatedAssetPopUp(
+			'Basic Web Content'
+		);
+	}
 );
 
 prefixUrlTest(
@@ -611,7 +729,9 @@ scheduleTest(
 		workflowPage,
 		workflowTasksPage,
 	}) => {
-		const site = await apiHelpers.headlessSite.createSite('papite');
+		const site = await apiHelpers.headlessSite.createSite({
+			name: 'papite',
+		});
 
 		await workflowPage.goto(site.friendlyUrlPath);
 
