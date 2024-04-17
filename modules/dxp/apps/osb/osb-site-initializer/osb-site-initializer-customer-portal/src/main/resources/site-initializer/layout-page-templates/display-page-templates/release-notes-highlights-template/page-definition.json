@@ -261,12 +261,13 @@
 											"id": "tablet"
 										}
 									],
-									"size": 9
+									"size": 10
 								},
 								"pageElements": [
 									{
 										"definition": {
 											"fragmentStyle": {
+												"marginRight": "13rem",
 												"minHeight": "52.5vh"
 											},
 											"widgetInstance": {
@@ -312,7 +313,7 @@
 											"id": "tablet"
 										}
 									],
-									"size": 3
+									"size": 2
 								},
 								"pageElements": [
 									{
