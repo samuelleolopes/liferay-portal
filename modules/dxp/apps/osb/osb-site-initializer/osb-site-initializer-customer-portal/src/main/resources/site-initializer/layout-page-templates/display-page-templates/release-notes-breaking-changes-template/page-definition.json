@@ -43,7 +43,7 @@
 								"align": "Start",
 								"contentDisplay": "FlexRow",
 								"justify": "SpaceBetween",
-								"marginBottom": 1,
+								"marginBottom": 1.5,
 								"marginTop": 1
 							}
 						},
@@ -261,18 +261,19 @@
 											"id": "tablet"
 										}
 									],
-									"size": 9
+									"size": 10
 								},
 								"pageElements": [
 									{
 										"definition": {
 											"fragmentStyle": {
+												"marginRight": "13rem",
 												"minHeight": "52.5vh"
 											},
 											"widgetInstance": {
 												"widgetConfig": {
 													"displayInDocumentForm": "false",
-													"displayStyle": "ddmTemplate_RELEASE-NOTES-HIGHLIGHTS-SEARCH",
+													"displayStyle": "ddmTemplate_RELEASE-NOTES-BREAKING-CHANGE-SEARCH",
 													"displayStyleGroupId": "[$GROUP_ID$]",
 													"federatedSearchKey": "",
 													"fieldsToDisplay": "",
@@ -312,7 +313,7 @@
 											"id": "tablet"
 										}
 									],
-									"size": 3
+									"size": 2
 								},
 								"pageElements": [
 									{
