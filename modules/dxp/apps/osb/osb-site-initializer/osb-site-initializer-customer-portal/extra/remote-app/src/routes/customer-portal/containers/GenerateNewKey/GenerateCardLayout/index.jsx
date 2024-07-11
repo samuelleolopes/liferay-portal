@@ -18,6 +18,9 @@ const GenerateCardLayout = ({
 	const startDate = selectedKeyData?.selectedSubscription?.startDate;
 	const endDate = selectedKeyData?.selectedSubscription?.endDate;
 	const licenseEndDate = getLicenseKeyEndDatesByLicenseType(selectedKeyData);
+	const isComplimentaryKey = selectedKeyData?.selectedSubscription.complimentary;
+
+	console.log('selectedKeyData3221', selectedKeyData);
 
 	const formatDate = (
 		date,
@@ -31,14 +34,22 @@ const GenerateCardLayout = ({
 		expirationRenewDate
 	)}`;
 
+	// const renewalComplimentaryDates = `${formatDate(startDate)} - ${formatDate(
+	// 	endDate
+	// )}`;
+
 	const HandleSelectedDates = () => {
 		if (selectedKeyData?.selectedSubscription.perpetual) {
 			return i18n.translate('not-applicable');
 		}
 
-		if (isRenew) {
+		if (isRenew && !isComplimentaryKey) {
 			return renewalDates;
 		}
+
+		// if (isRenew && isComplimentaryKey) {
+		// 	return renewalComplimentaryDates;
+		// }
 
 		return currentDate;
 	};
@@ -77,7 +88,7 @@ const GenerateCardLayout = ({
 						</p>
 
 						<p className="m-0">
-							{i18n.translate('key-activations-available')}
+							{i18n.translate('key-activations-availablessss')}
 						</p>
 
 						<p className="font-weight-normal">

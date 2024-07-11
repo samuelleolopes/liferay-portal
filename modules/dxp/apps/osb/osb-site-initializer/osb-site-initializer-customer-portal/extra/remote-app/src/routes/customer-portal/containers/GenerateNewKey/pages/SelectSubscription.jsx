@@ -56,7 +56,7 @@ const SelectSubscription = ({
 	const navigate = useNavigate();
 	const [
 		availableActivationKeysTotal,
-		setAvailableActivationKeysTotal,
+		setAvailableActivationKeysTotal
 	] = useState();
 
 	useEffect(() => {
@@ -98,6 +98,8 @@ const SelectSubscription = ({
 		selectedKeyType?.includes('Enterprise');
 
 	const typesProduct = generateFormValues?.versions[0]?.types;
+
+	console.log('selectedKeyData1111', selectedKeyData);
 
 	const handleProduct = useCallback(() => {
 		const filteredTypes = typesProduct?.find(
@@ -177,6 +179,8 @@ const SelectSubscription = ({
 		...new Set(versionsOfTheSelectedKeys),
 	].join(', ');
 
+	console.log('STATE', state);
+
 	const productNames = [
 		...new Set(
 			state?.activationKeys?.map((key) => {
@@ -214,9 +218,7 @@ const SelectSubscription = ({
 
 	const productKey = typesProduct?.find(
 		(item) =>
-			item.licenseEntryDisplayName
-				.toLowerCase()
-				.replace(/[- ]+/g, '-') ===
+			item.licenseEntryName.toLowerCase().replace(/[- ]+/g, '-') ===
 			uniqueSelectedProductName
 				.toString()
 				.toLowerCase()
@@ -237,12 +239,10 @@ const SelectSubscription = ({
 		const matchingProductType = productVersions
 			.find((versionData) => versionData.label === productVersionLabel)
 			?.types.find((productType) => {
-				const displayNameMatch = productType.licenseEntryName.includes(
-					productName
-				);
-				const typeMatch = productType.licenseEntryType.includes(
-					licenseEntryType
-				);
+				const displayNameMatch =
+					productType.licenseEntryName.includes(productName);
+				const typeMatch =
+					productType.licenseEntryType.includes(licenseEntryType);
 
 				if (displayNameMatch && typeMatch) {
 					return true;
@@ -512,7 +512,7 @@ const SelectSubscription = ({
 									}),
 									FORMAT_DATE_TYPES.day2DMonthSYearN
 								),
-						  ])
+							])
 						: i18n.sub(
 								'activation-keys-will-be-valid-indefinitely-starting-x-or-until-manually-deactivated',
 								[
@@ -521,7 +521,7 @@ const SelectSubscription = ({
 										FORMAT_DATE_TYPES.day2DMonthSYearN
 									),
 								]
-						  )}
+							)}
 				</span>
 			</ClayAlert>
 		);
@@ -570,10 +570,12 @@ const SelectSubscription = ({
 								if (state.activationKeys?.length === 1) {
 									setStep(2);
 									setSubmitKeyAction({submitKey});
-								} else {
+								}
+								else {
 									submitKey();
 								}
-							} else {
+							}
+							else {
 								setStep(hasComplimentaryKey ? 1 : 2);
 							}
 
@@ -583,12 +585,11 @@ const SelectSubscription = ({
 							}));
 						}}
 					>
-						{!hasComplimentaryKey &&
-						state.id === 'renew' &&
+						{state.id === 'renew' &&
 						state.activationKeys?.length > 1
 							? i18n.sub('generate-x-keys', [
 									state.activationKeys?.length,
-							  ])
+								])
 							: i18n.translate('next')}
 					</Button>
 				),
@@ -696,14 +697,14 @@ const SelectSubscription = ({
 								/>
 							) : (
 								productKeyTypes &&
-								productKeyTypes[
-									selectedVersionIndex
-								]?.map((keyType) => (
-									<ClaySelect.Option
-										key={keyType}
-										label={keyType}
-									/>
-								))
+								productKeyTypes[selectedVersionIndex]?.map(
+									(keyType) => (
+										<ClaySelect.Option
+											key={keyType}
+											label={keyType}
+										/>
+									)
+								)
 							)}
 						</ClaySelect>
 
@@ -838,44 +839,45 @@ const SelectSubscription = ({
 							})}
 					</div>
 
-					{featureFlags.includes('LPS-148342') && allowComplimentary && (
-						<Radio
-							hasCustomAlert={
-								hasComplimentaryKey && (
-									<CustomComplimentaryKeyAlert />
-								)
-							}
-							isActivationKeyAvailable={5}
-							label="Complimentary"
-							onChange={(event) => {
-								setSelectedSubscription({
-									...event.target.value,
-								});
-								setHasComplimentaryKey(true);
+					{featureFlags.includes('LPS-148342') &&
+						allowComplimentary && (
+							<Radio
+								hasCustomAlert={
+									hasComplimentaryKey && (
+										<CustomComplimentaryKeyAlert />
+									)
+								}
+								isActivationKeyAvailable={5}
+								label="Complimentary"
+								onChange={(event) => {
+									setSelectedSubscription({
+										...event.target.value,
+									});
+									setHasComplimentaryKey(true);
 
-								setSelectedKeyData({
-									licenseEntryType:
-										state.id === 'renew'
-											? productName
-											: selectedKeyType,
-									productType: productGroupName,
-									productVersion:
-										state.id === 'renew'
-											? uniqueVersionOfTheSelectedKey
-											: selectedVersion,
-								});
-							}}
-							selected={hasComplimentaryKey}
-							subtitle={i18n.translate(
-								'choose-this-option-if-you-want-an-activation-key-for-60-days'
-							)}
-							value={
-								state.id === 'renew'
-									? mockedValuesForComplimentaryKeysOfTheSelectedKeys
-									: mockedValuesForComplimentaryKeys
-							}
-						/>
-					)}
+									setSelectedKeyData({
+										licenseEntryType:
+											state.id === 'renew'
+												? productName
+												: selectedKeyType,
+										productType: productGroupName,
+										productVersion:
+											state.id === 'renew'
+												? uniqueVersionOfTheSelectedKey
+												: selectedVersion,
+									});
+								}}
+								selected={hasComplimentaryKey}
+								subtitle={i18n.translate(
+									'choose-this-option-if-you-want-an-activation-key-for-60-days'
+								)}
+								value={
+									state.id === 'renew'
+										? mockedValuesForComplimentaryKeysOfTheSelectedKeys
+										: mockedValuesForComplimentaryKeys
+								}
+							/>
+						)}
 
 					<div className="dropdown-divider mt-3"></div>
 				</div>

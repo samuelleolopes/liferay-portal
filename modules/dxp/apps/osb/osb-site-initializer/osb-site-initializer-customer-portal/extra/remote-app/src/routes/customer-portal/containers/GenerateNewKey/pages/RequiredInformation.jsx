@@ -65,6 +65,8 @@ const RequiredInformation = ({
 	const isRenew = state?.id === 'renew' ? true : false;
 	const renewKey = state?.activationKeys[0];
 
+	// console.log('hasComplimentaryKey', hasComplimentaryKey);
+
 	const avaliableKeysMaximumCount =
 		selectedKeyData?.selectedSubscription?.quantity;
 	const usedKeysCount =
@@ -79,6 +81,9 @@ const RequiredInformation = ({
 
 		return !!fieldValues.length;
 	});
+
+	// console.log('stateREQ', state);
+	// console.log('selectedKeyData', selectedKeyData);
 
 	const isComplimentaryKey =
 		selectedKeyData?.selectedSubscription.complimentary;
@@ -352,6 +357,7 @@ const RequiredInformation = ({
 			);
 		}
 	};
+	
 	const HandleButtonValue = () => {
 		if (isRenew) {
 			return state?.activationKeys.length === 1 ? i18n.sub('renew-x-key', [state?.activationKeys.length]) : i18n.sub('renew-x-keys', [state?.activationKeys.length]);
@@ -406,7 +412,7 @@ const RequiredInformation = ({
 								displayType="primary"
 								isLoading={isLoadingGenerateKey}
 								onClick={() => {
-									if (isRenew) {
+									if (isRenew && !hasComplimentaryKey) {
 										setIsLoadingGenerateKey(true);
 
 										return submitKeyAction.submitKey();

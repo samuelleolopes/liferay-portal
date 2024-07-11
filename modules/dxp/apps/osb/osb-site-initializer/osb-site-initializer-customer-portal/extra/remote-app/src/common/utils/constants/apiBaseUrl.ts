@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-const {REACT_APP_LIFERAY_API = window.location.origin} = process.env;
+const REACT_APP_LIFERAY_API = window.location.origin;
 
 const API_BASE_URL = REACT_APP_LIFERAY_API;
 
